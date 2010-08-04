@@ -10,6 +10,6 @@ This version contains a fix for visor issue #73: creating a new tab while visor 
 
 Downloads:
 
-* [32bit version](http://github.com/jmlacroix/visor/raw/master/Visor-unstable32.zip)
-* [64bit version](http://github.com/jmlacroix/visor/raw/master/Visor-unstable64.zip)
+* [32bit version](http://github.com/downloads/jmlacroix/visor/Visor-issue73-32bits.zip)
+* [64bit version](http://github.com/downloads/jmlacroix/visor/Visor-issue73-64bits.zip)
 
