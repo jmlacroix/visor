@@ -16,7 +16,8 @@
     BOOL isHidden;
     BOOL isMain;
     BOOL isKey;
-    BOOL isPinned;
+    BOOL isOnTop;
+    BOOL isAutoHide;
     NSImage* activeIcon;
     NSImage* inactiveIcon;
     NSScreen* cachedScreen;
@@ -34,7 +35,8 @@
 - (void)setWindow:(NSWindow *)inWindow;
 - (BOOL)isHidden;
 
-- (IBAction)pinAction:(id)sender;
+- (IBAction)onTopAction:(id)sender;
+- (IBAction)autoHideAction:(id)sender;
 - (IBAction)toggleVisor:(id)sender;
 - (IBAction)showPrefs:(id)sender;
 - (IBAction)visitHomepage:(id)sender;

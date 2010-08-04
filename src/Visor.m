@@ -623,6 +623,8 @@ static const size_t kModifierEventTypeSpecSize = sizeof(kModifierEventTypeSpec) 
     isHidden = true;
     isMain = false;
     isKey = false;
+    isAutoHide = false;
+    isOnTop = false;
     dontShowOnFirstTab = true;
     
     [NSBundle loadNibNamed:@"Visor" owner:self];
@@ -677,15 +679,29 @@ static const size_t kModifierEventTypeSpecSize = sizeof(kModifierEventTypeSpec) 
 
     [self setWindow:win];
 
-    [window_ setLevel:NSMainMenuWindowLevel-1];
+    [self setWindowOnTop];
     [window_ setOpaque:NO];
         
     [self updateStatusMenu];
 }
 
-- (IBAction)pinAction:(id)sender {
-    LOG(@"pinAction %@", sender);
-    isPinned = !isPinned;
+- (IBAction)onTopAction:(id)sender {
+    LOG(@"onTopAction %@", sender);
+    isOnTop = !isOnTop;
+    if (isOnTop) {
+        [self setWindowOnTop];
+    } else { 
+        [self setWindowNormal];
+    }   
+    [self updateStatusMenu];
+}
+
+- (IBAction)autoHideAction:(id)sender {
+    LOG(@"autoHideAction %@", sender);
+    isAutoHide = !isAutoHide;
+    if (isAutoHide && !isMain) {
+        [self hideVisor:false];
+    }
     [self updateStatusMenu];
 }
 
@@ -698,8 +714,12 @@ static const size_t kModifierEventTypeSpecSize = sizeof(kModifierEventTypeSpec) 
     if (isHidden) {
         [self showVisor:false];
     } else {
-        [self restorePreviouslyActiveApp];
-        [self hideVisor:false];
+        if (!isMain) {
+            [self showVisor:false];
+        } else {
+            [self restorePreviouslyActiveApp];
+            [self hideVisor:false];
+        }
     }
 }
 
@@ -714,6 +734,14 @@ static const size_t kModifierEventTypeSpecSize = sizeof(kModifierEventTypeSpec) 
 - (IBAction)visitHomepage:(id)sender {
     LOG(@"visitHomepage");
     [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"http://visor.binaryage.com"]];
+}
+
+- (void)setWindowOnTop {
+	[window_ setLevel:NSMainMenuWindowLevel-1];
+}
+
+- (void)setWindowNormal {
+	[window_ setLevel:NSNormalWindowLevel];
 }
 
 - (void)resetWindowPlacement {
@@ -987,12 +1015,16 @@ static const size_t kModifierEventTypeSpecSize = sizeof(kModifierEventTypeSpec) 
 }
 
 - (void)showVisor:(BOOL)fast {
-    if (!isHidden) return;
+    if (!isHidden && isMain) return;
     if (dontShowOnFirstTab) {
         dontShowOnFirstTab = false;
         return;
     }
+	
+    BOOL wasHidden = isHidden;
+    
     LOG(@"showVisor %d", fast);
+    [self setWindowOnTop];
     isHidden = false;
     [self updateStatusMenu];
     [self cacheScreen]; // performs screen pointer caching at this point
@@ -1000,12 +1032,18 @@ static const size_t kModifierEventTypeSpecSize = sizeof(kModifierEventTypeSpec) 
     [self storePreviouslyActiveApp];
     [NSApp activateIgnoringOtherApps:YES];
     [window_ makeKeyAndOrderFront:self];
-    [window_ setHasShadow:YES];
-    [self applyVisorPositioning];
+    if (wasHidden) {
+        [window_ setHasShadow:YES];
+        [self applyVisorPositioning];
+        [window_ update];
+        [self slideWindows:1 fast:fast];
+        [window_ invalidateShadow];
+    }
     [window_ update];
-    [self slideWindows:1 fast:fast];
-    [window_ invalidateShadow];
-    [window_ update];
+    
+    if (!isOnTop) {
+        [self setWindowNormal];
+    }
 }
 
 -(void)hideOnEscape {
@@ -1074,7 +1112,7 @@ static const size_t kModifierEventTypeSpecSize = sizeof(kModifierEventTypeSpec) 
     LOG(@"resignKey %@", sender);
     isKey = false;
     [self updateEscapeHotKeyRegistration];
-    if (!isPinned && !isMain && !isKey && !isHidden){
+    if (isAutoHide && !isMain && !isKey && !isHidden){
         [self hideVisor:false];  
     }
 }
@@ -1082,7 +1120,7 @@ static const size_t kModifierEventTypeSpecSize = sizeof(kModifierEventTypeSpec) 
 - (void)resignMain:(id)sender {
     LOG(@"resignMain %@", sender);
     isMain = false;
-    if (!isPinned && !isMain && !isKey && !isHidden){
+    if (isAutoHide && !isMain && !isKey && !isHidden){
         [self hideVisor:false];  
     }
 }
@@ -1260,12 +1298,19 @@ NSString* stringForCharacter(const unsigned short aKeyCode, unichar aCharacter);
         [showItem setTitle:@"Hide Visor"];
     
     // update second menu item
-    NSMenuItem* pinItem = [statusMenu itemAtIndex:1];
-    if (!isPinned)
-        [pinItem setTitle:@"Pin Visor"];
+    NSMenuItem* hideItem = [statusMenu itemAtIndex:1];
+    if (isAutoHide)
+        [hideItem setState:NSOnState];
     else
-        [pinItem setTitle:@"Unpin Visor"];
+        [hideItem setState:NSOffState];
     
+    // update second menu item
+    NSMenuItem* topItem = [statusMenu itemAtIndex:2];
+    if (isOnTop)
+        [topItem setState:NSOnState];
+    else
+        [topItem setState:NSOffState];
+	
     // update icon
     BOOL status = [self status];
     if (status)
