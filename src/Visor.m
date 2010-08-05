@@ -523,6 +523,12 @@ static const size_t kModifierEventTypeSpecSize = sizeof(kModifierEventTypeSpec) 
     if (![ud objectForKey:@"VisorOnEverySpace"]) {
         [ud setBool:YES forKey:@"VisorOnEverySpace"];
     }
+    if (![ud objectForKey:@"VisorOnTop"]) {
+        [ud setBool:NO forKey:@"VisorOnTop"];
+    }
+    if (![ud objectForKey:@"VisorAutoHide"]) {
+        [ud setBool:NO forKey:@"VisorAutoHide"];
+    }
     if (![ud objectForKey:@"VisorPosition"]) {
         [ud setObject:@"Top-Stretch" forKey:@"VisorPosition"];
     }
@@ -623,9 +629,10 @@ static const size_t kModifierEventTypeSpecSize = sizeof(kModifierEventTypeSpec) 
     isHidden = true;
     isMain = false;
     isKey = false;
-    isAutoHide = false;
-    isOnTop = false;
     dontShowOnFirstTab = true;
+
+    isAutoHide = [[NSUserDefaults standardUserDefaults] boolForKey:@"VisorAutoHide"];
+    isOnTop = [[NSUserDefaults standardUserDefaults] boolForKey:@"VisorOnTop"];
     
     [NSBundle loadNibNamed:@"Visor" owner:self];
     
@@ -649,6 +656,8 @@ static const size_t kModifierEventTypeSpecSize = sizeof(kModifierEventTypeSpec) 
     [udc addObserver:self forKeyPath:@"values.VisorScreen" options:0 context:nil];
     [udc addObserver:self forKeyPath:@"values.VisorPosition" options:0 context:nil];
     [udc addObserver:self forKeyPath:@"values.VisorHideOnEscape" options:0 context:nil];
+    [udc addObserver:self forKeyPath:@"values.VisorOnTop" options:0 context:nil];
+    [udc addObserver:self forKeyPath:@"values.VisorAutoHide" options:0 context:nil];
     
     return self;
 }
@@ -737,7 +746,7 @@ static const size_t kModifierEventTypeSpecSize = sizeof(kModifierEventTypeSpec) 
 }
 
 - (void)setWindowOnTop {
-	[window_ setLevel:NSMainMenuWindowLevel-1];
+	[window_ setLevel:NSDockWindowLevel]; //NSMainMenuWindowLevel-1
 }
 
 - (void)setWindowNormal {
@@ -1169,6 +1178,9 @@ static const size_t kModifierEventTypeSpecSize = sizeof(kModifierEventTypeSpec) 
     }
     if ([keyPath isEqualToString:@"values.VisorHideOnEscape"]) {
         [self updateEscapeHotKeyRegistration];
+    }
+    if ([keyPath isEqualToString:@"values.VisorOnTop"]) {
+        [self setWindowOnTop];
     }
 }
 
