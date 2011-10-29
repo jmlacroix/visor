@@ -6,9 +6,9 @@
 //  Licensed under the Apache License, Version 2.0 (the "License"); you may not
 //  use this file except in compliance with the License.  You may obtain a copy
 //  of the License at
-// 
+//
 //  http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 //  Unless required by applicable law or agreed to in writing, software
 //  distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
 //  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -50,7 +50,7 @@ NSString *const kGTMSystemBuild10_6_0_10A190 = @"10A190";
     require_noerr(Gestalt(gestaltSystemVersionMajor, &sGTMSystemVersionMajor), failedGestalt);
     require_noerr(Gestalt(gestaltSystemVersionMinor, &sGTMSystemVersionMinor), failedGestalt);
     require_noerr(Gestalt(gestaltSystemVersionBugFix, &sGTMSystemVersionBugFix), failedGestalt);
-    
+
     return;
 
   failedGestalt:
@@ -75,16 +75,16 @@ NSString *const kGTMSystemBuild10_6_0_10A190 = @"10A190";
 
 #else // GTM_MACOS_SDK
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    NSDictionary *systemVersionPlist 
+    NSDictionary *systemVersionPlist
       = [NSDictionary dictionaryWithContentsOfFile:kSystemVersionPlistPath];
     NSString *version = [systemVersionPlist objectForKey:@"ProductVersion"];
     _GTMDevAssert(version, @"Unable to get version");
     NSArray *versionInfo = [version componentsSeparatedByString:@"."];
     NSUInteger length = [versionInfo count];
-    _GTMDevAssert(length > 1 && length < 4, 
+    _GTMDevAssert(length > 1 && length < 4,
                   @"Unparseable version %@", version);
     sGTMSystemVersionMajor = [[versionInfo objectAtIndex:0] intValue];
-    _GTMDevAssert(sGTMSystemVersionMajor != 0, 
+    _GTMDevAssert(sGTMSystemVersionMajor != 0,
                   @"Unknown version for %@", version);
     sGTMSystemVersionMinor = [[versionInfo objectAtIndex:1] intValue];
     if (length == 3) {
@@ -113,7 +113,7 @@ NSString *const kGTMSystemBuild10_6_0_10A190 = @"10A190";
     // software to want this, and it costs a bit to get at startup.
     // This will mainly be for unit test cases.
     if (!sBuild) {
-      NSDictionary *systemVersionPlist 
+      NSDictionary *systemVersionPlist
         = [NSDictionary dictionaryWithContentsOfFile:kSystemVersionPlistPath];
       sBuild = [[systemVersionPlist objectForKey:@"ProductBuildVersion"] retain];
       GTMNSMakeUncollectable(sBuild);
@@ -124,36 +124,36 @@ NSString *const kGTMSystemBuild10_6_0_10A190 = @"10A190";
 }
 
 + (BOOL)isBuildLessThan:(NSString*)build {
-  NSComparisonResult result 
-    = [[self build] compare:build 
+  NSComparisonResult result
+    = [[self build] compare:build
                     options:NSNumericSearch | NSCaseInsensitiveSearch];
   return result == NSOrderedAscending;
 }
-  
+
 + (BOOL)isBuildLessThanOrEqualTo:(NSString*)build {
-  NSComparisonResult result 
-    = [[self build] compare:build 
+  NSComparisonResult result
+    = [[self build] compare:build
                     options:NSNumericSearch | NSCaseInsensitiveSearch];
   return result != NSOrderedDescending;
 }
 
 + (BOOL)isBuildGreaterThan:(NSString*)build {
-  NSComparisonResult result 
-    = [[self build] compare:build 
+  NSComparisonResult result
+    = [[self build] compare:build
                     options:NSNumericSearch | NSCaseInsensitiveSearch];
   return result == NSOrderedDescending;
 }
 
 + (BOOL)isBuildGreaterThanOrEqualTo:(NSString*)build {
-  NSComparisonResult result 
-    = [[self build] compare:build 
+  NSComparisonResult result
+    = [[self build] compare:build
                     options:NSNumericSearch | NSCaseInsensitiveSearch];
   return result != NSOrderedAscending;
 }
 
 + (BOOL)isBuildEqualTo:(NSString *)build {
-  NSComparisonResult result 
-    = [[self build] compare:build 
+  NSComparisonResult result
+    = [[self build] compare:build
                     options:NSNumericSearch | NSCaseInsensitiveSearch];
   return result == NSOrderedSame;
 }
@@ -176,22 +176,22 @@ NSString *const kGTMSystemBuild10_6_0_10A190 = @"10A190";
 }
 
 + (BOOL)isPantherOrGreater {
-  return (sGTMSystemVersionMajor > 10) || 
+  return (sGTMSystemVersionMajor > 10) ||
           (sGTMSystemVersionMajor == 10 && sGTMSystemVersionMinor >= 3);
 }
 
 + (BOOL)isTigerOrGreater {
-  return (sGTMSystemVersionMajor > 10) || 
+  return (sGTMSystemVersionMajor > 10) ||
           (sGTMSystemVersionMajor == 10 && sGTMSystemVersionMinor >= 4);
 }
 
 + (BOOL)isLeopardOrGreater {
-  return (sGTMSystemVersionMajor > 10) || 
+  return (sGTMSystemVersionMajor > 10) ||
           (sGTMSystemVersionMajor == 10 && sGTMSystemVersionMinor >= 5);
 }
 
 + (BOOL)isSnowLeopardOrGreater {
-  return (sGTMSystemVersionMajor > 10) || 
+  return (sGTMSystemVersionMajor > 10) ||
           (sGTMSystemVersionMajor == 10 && sGTMSystemVersionMinor >= 6);
 }
 
@@ -224,9 +224,9 @@ NSString *const kGTMSystemBuild10_6_0_10A190 = @"10A190";
   architecture = kGTMArch_i386;
 #endif // __LP64__
 #endif // !__POWERPC__
-  
+
 #endif // GTM_IPHONE_SDK
   return architecture;
-}  
+}
 
 @end

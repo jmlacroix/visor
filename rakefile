@@ -80,7 +80,7 @@ def sys(cmd)
 end
 
 desc "opens XCode project"
-task :open do 
+task :open do
   `open "#{XCODE_PROJECT}"`
 end
 
@@ -110,10 +110,10 @@ task :release do
   patch(VISOR_XIB, [['##VERSION##', $version], ['##REVISION##', $short_revision]])
   patch(INFO_PLIST, [['##VERSION##', $version]])
   patch(VISOR_M, [['##VERSION##', $version], ['##REVISION##', $short_revision], ['##SHA##', $revision]])
-  
+
   puts "#{cmd_color('Building')} #{file_color(TMP_DIR)}"
   Dir.chdir(TMP_DIR) do
-    `rm -rf "build"` # this might cause troubles when doing releases from dev machine 
+    `rm -rf "build"` # this might cause troubles when doing releases from dev machine
     `xcodebuild -configuration Release 1>&2`
     die("build failed") unless $?==0
   end

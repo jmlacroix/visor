@@ -8,7 +8,7 @@
 - (void) Visor_rightMouseDown:(NSEvent *)theEvent
 {
 	bool pasteOnRightclick = [[NSUserDefaults standardUserDefaults] boolForKey:@"VisorPasteOnRightclick"];
-	
+
 	if (pasteOnRightclick)
 		[(id)self performSelector:@selector(paste:) withObject:nil];
 	else
@@ -18,7 +18,7 @@
 
 @implementation PasteOnRightclick
 + (void) load {
-    [NSClassFromString(@"TTView") jr_swizzleMethod:@selector(rightMouseDown:) 
+    [NSClassFromString(@"TTView") jr_swizzleMethod:@selector(rightMouseDown:)
 										withMethod:@selector(Visor_rightMouseDown:) error:NULL];
     LOG(@"PasteOnRightclick installed");
 }

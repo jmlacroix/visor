@@ -50,7 +50,7 @@ int main(int argc, char *argv[]) {
 
 + (BOOL)allowsReverseTransformation {
     LOG(@"allowsReverseTransformation");
-    
+
     return YES;
 }
 
@@ -215,11 +215,11 @@ int main(int argc, char *argv[]) {
 - (BOOL)Visor_TTApplication_applicationShouldHandleReopen:(id)fp8 hasVisibleWindows:(BOOL)fp12 {
     LOG(@"Visor_TTAplication_applicationShouldHandleReopen");
     Visor *visor = [Visor sharedInstance];
-    
+
     if (![visor reopenVisor] && ![self mainTerminalWindow]) {
         [self newShell:nil];
     }
-    
+
     return [self Visor_TTApplication_applicationShouldHandleReopen:fp8 hasVisibleWindows:(BOOL)fp12];
 }
 
@@ -228,14 +228,14 @@ int main(int argc, char *argv[]) {
 
     BOOL showOnReopen = [[NSUserDefaults standardUserDefaults] boolForKey:@"VisorShowOnReopen"];
     id currentWindow = [self Visor_TTApplication_mainTerminalWindow];
-    LOG(@"currentWindow: %@", currentWindow);   
+    LOG(@"currentWindow: %@", currentWindow);
     Visor *visor = [Visor sharedInstance];
-    
+
     if (!showOnReopen && [[visor window] isEqual:currentWindow]) {
         currentWindow = nil;
     }
-    LOG(@"currentWindow: %@", currentWindow);   
-    
+    LOG(@"currentWindow: %@", currentWindow);
+
     return currentWindow;
 }
 
@@ -265,24 +265,24 @@ int main(int argc, char *argv[]) {
 - (BOOL) Visor_canBecomeKeyWindow {
     LOG(@"canBecomeKeyWindow");
     BOOL canBecomeKeyWindow = YES;
-    
+
     Visor *visor = [Visor sharedInstance];
     if ([[visor window] isEqual:self] && [visor isHidden]) {
         canBecomeKeyWindow = NO;
     }
-    
+
     return canBecomeKeyWindow;
 }
 
 - (BOOL) Visor_canBecomeMainWindow {
     LOG(@"canBecomeMainWindow");
     BOOL canBecomeMainWindow = YES;
-    
+
     Visor *visor = [Visor sharedInstance];
     if ([[visor window] isEqual:self] && [visor isHidden]) {
         canBecomeMainWindow = NO;
     }
-    
+
     return canBecomeMainWindow;
 }
 
@@ -302,7 +302,7 @@ int main(int argc, char *argv[]) {
     NSNotificationCenter* dnc = [NSNotificationCenter defaultCenter];
 
     [inWindow retain];
-    
+
     [dnc removeObserver:self name:NSWindowDidBecomeKeyNotification object:window_];
     [dnc removeObserver:self name:NSWindowDidResignKeyNotification object:window_];
     [dnc removeObserver:self name:NSWindowDidBecomeMainNotification object:window_];
@@ -310,7 +310,7 @@ int main(int argc, char *argv[]) {
     [dnc removeObserver:self name:NSWindowWillCloseNotification object:window_];
 
     LOG(@"setWindow %@ beforeRelease", window_);
-    [window_ release];  
+    [window_ release];
     window_ = inWindow;
     LOG(@"setWindow %@ afterRelease", window_);
 
@@ -346,10 +346,10 @@ int main(int argc, char *argv[]) {
 
     NSWindow* prefsWindow = [prefsController window];
     NSToolbar* toolbar = [prefsWindow toolbar];
-    
+
     NSTabView* sourceTabView = [[[settingsWindow contentView] subviews] objectAtIndex:0];
     NSTabViewItem* item = [sourceTabView tabViewItemAtIndex:0];
-    
+
     [toolbar insertItemWithItemIdentifier:@"Visor" atIndex:4];
     [tabView addTabViewItem:item];
 }
@@ -372,7 +372,7 @@ int main(int argc, char *argv[]) {
 
     if (!visorProfile && (createIfNecessary || runningOnLeopard_)) {
         LOG(@"   ... initialising Visor profile");
-        
+
         // create visor profile in case it does not exist yet, use startup profile as a template
         id startupProfile = [profileManager startupProfile];
         visorProfile = [startupProfile copyWithZone:nil];
@@ -383,8 +383,8 @@ int main(int argc, char *argv[]) {
         NSString *error = nil;
         NSPropertyListFormat format = nil;
         id plist = nil;
-        NSString *path = [[NSBundle bundleForClass:[visor class]] pathForResource:@"VisorProfile" ofType:@"plist"]; 
-        plistData = [NSData dataWithContentsOfFile:path]; 
+        NSString *path = [[NSBundle bundleForClass:[visor class]] pathForResource:@"VisorProfile" ofType:@"plist"];
+        plistData = [NSData dataWithContentsOfFile:path];
         plist = [NSPropertyListSerialization propertyListFromData:plistData mutabilityOption:NSPropertyListImmutable format:&format errorDescription:&error];
         if (!plist) {
             LOG(@"Error reading plist from file '%s', error = '%s'", [path UTF8String], [error UTF8String]);
@@ -398,7 +398,7 @@ int main(int argc, char *argv[]) {
     } else {
         visorProfile = [profileManager defaultProfile];
     }
-    
+
     return visorProfile;
 }
 
@@ -421,7 +421,7 @@ int main(int argc, char *argv[]) {
     [NSClassFromString(@"TTWindowController") jr_swizzleMethod:@selector(newTabWithProfile:command:runAsShell:) withMethod:@selector(Visor_TTWindowController_newTabWithProfile:command:runAsShell:) error:NULL];
     [NSClassFromString(@"TTWindowController") jr_swizzleMethod:@selector(setCloseDialogExpected:) withMethod:@selector(Visor_TTWindowController_setCloseDialogExpected:) error:NULL];
     [NSClassFromString(@"TTWindowController") jr_swizzleMethod:@selector(window:willPositionSheet:usingRect:) withMethod:@selector(Visor_TTWindowController_window:willPositionSheet:usingRect:) error:NULL];
-    
+
     [NSClassFromString(@"TTWindow") jr_swizzleMethod:@selector(initWithContentRect:styleMask:backing:defer:) withMethod:@selector(Visor_initWithContentRect:styleMask:backing:defer:) error:NULL];
     [NSClassFromString(@"TTWindow") jr_swizzleMethod:@selector(canBecomeKeyWindow) withMethod:@selector(Visor_canBecomeKeyWindow) error:NULL];
     [NSClassFromString(@"TTWindow") jr_swizzleMethod:@selector(canBecomeMainWindow) withMethod:@selector(Visor_canBecomeMainWindow) error:NULL];
@@ -434,7 +434,7 @@ int main(int argc, char *argv[]) {
     [NSClassFromString(@"TTAppPrefsController") jr_swizzleMethod:@selector(windowDidLoad) withMethod:@selector(Visor_TTAppPrefsController_windowDidLoad) error:NULL];
     [NSClassFromString(@"TTAppPrefsController") jr_swizzleMethod:@selector(toolbar:itemForItemIdentifier:willBeInsertedIntoToolbar:) withMethod:@selector(Visor_TTAppPrefsController_toolbar:itemForItemIdentifier:willBeInsertedIntoToolbar:) error:NULL];
     [NSClassFromString(@"TTAppPrefsController") jr_swizzleMethod:@selector(windowWillReturnFieldEditor:toObject:) withMethod:@selector(Visor_TTAppPrefsController_windowWillReturnFieldEditor:toObject:) error:NULL];
-    
+
     NSDictionary* defaults = [NSDictionary dictionaryWithContentsOfFile:[[NSBundle bundleForClass:[self class]]pathForResource:@"Defaults" ofType:@"plist"]];
     NSUserDefaults* ud = [NSUserDefaults standardUserDefaults];
     [ud registerDefaults:defaults];
@@ -444,7 +444,7 @@ int main(int argc, char *argv[]) {
     id visorProfile = [self getVisorProfile];
     id app = [NSClassFromString(@"TTApplication") sharedApplication];
     id controller = [app newWindowControllerWithProfile:visorProfile];
-    
+
     Visor *visor = [Visor sharedInstance];
     [visor resetWindowPlacement];
 
@@ -467,7 +467,7 @@ int main(int argc, char *argv[]) {
 static const EventTypeSpec kModifierEventTypeSpec[] = { { kEventClassKeyboard, kEventRawKeyModifiersChanged } };
 static const size_t kModifierEventTypeSpecSize = sizeof(kModifierEventTypeSpec) / sizeof(EventTypeSpec);
 
-// Allows me to intercept the "control" double tap to activate QSB. There 
+// Allows me to intercept the "control" double tap to activate QSB. There
 // appears to be no way to do this from straight Cocoa.
 - (void)startEventMonitoring {
     GTMCarbonEventMonitorHandler *handler = [GTMCarbonEventMonitorHandler sharedEventMonitorHandler];
@@ -481,8 +481,8 @@ static const size_t kModifierEventTypeSpecSize = sizeof(kModifierEventTypeSpec) 
     [handler setDelegate:nil];
 }
 
-- (OSStatus)gtm_eventHandler:(GTMCarbonEventHandler *)sender 
-               receivedEvent:(GTMCarbonEvent *)event 
+- (OSStatus)gtm_eventHandler:(GTMCarbonEventHandler *)sender
+               receivedEvent:(GTMCarbonEvent *)event
                      handler:(EventHandlerCallRef)handler {
   OSStatus status = eventNotHandledErr;
   if ([event eventClass] == kEventClassKeyboard &&
@@ -560,7 +560,7 @@ static const size_t kModifierEventTypeSpecSize = sizeof(kModifierEventTypeSpec) 
                          nil]
             forKey:@"VisorHotKey"];
     }
-    
+
     if (![ud objectForKey:@"VisorHotKeyEnabled"]) {
         [ud setBool:YES forKey:@"VisorHotKeyEnabled"];
     }
@@ -581,7 +581,7 @@ static const size_t kModifierEventTypeSpecSize = sizeof(kModifierEventTypeSpec) 
     }
 }
 
-- (void)webView:(WebView *)sender decidePolicyForNavigationAction:(NSDictionary *)actionInformation request:(NSURLRequest *)request frame:(WebFrame *)frame decisionListener:(id<WebPolicyDecisionListener>)listener {    
+- (void)webView:(WebView *)sender decidePolicyForNavigationAction:(NSDictionary *)actionInformation request:(NSURLRequest *)request frame:(WebFrame *)frame decisionListener:(id<WebPolicyDecisionListener>)listener {
     LOG(@"webView:decidePolicyForNavigationAction...");
     if ([[actionInformation objectForKey:WebActionNavigationTypeKey] intValue] != WebNavigationTypeOther) {
         [listener ignore];
@@ -607,24 +607,24 @@ static const size_t kModifierEventTypeSpecSize = sizeof(kModifierEventTypeSpec) 
     if (!self) return self;
 
     LOG(@"Visor init");
-    
+
     runningApplicationClass_ = NSClassFromString(@"NSRunningApplication"); // 10.6
     runningOnLeopard_ = !runningApplicationClass_;
     if (runningOnLeopard_) {
         // 10.5 path
         NSString *path = [[NSBundle bundleForClass:[self class]] pathForResource:@"RestoreApp" ofType:@"scpt"];
-        restoreAppAppleScriptSource = [[NSString alloc] initWithContentsOfFile:path encoding:NSMacOSRomanStringEncoding error:NULL]; 
-        scriptError = [[NSDictionary alloc] init]; 
+        restoreAppAppleScriptSource = [[NSString alloc] initWithContentsOfFile:path encoding:NSMacOSRomanStringEncoding error:NULL];
+        scriptError = [[NSDictionary alloc] init];
     }
-    
+
     [self setWindow:nil];
-    
+
     activeIcon=[[NSImage alloc]initWithContentsOfFile:[[NSBundle bundleForClass:[self classForCoder]]pathForImageResource:@"VisorActive"]];
     inactiveIcon=[[NSImage alloc]initWithContentsOfFile:[[NSBundle bundleForClass:[self classForCoder]]pathForImageResource:@"VisorInactive"]];
-    
+
     NSUserDefaults* ud = [NSUserDefaults standardUserDefaults];
     NSUserDefaultsController* udc = [NSUserDefaultsController sharedUserDefaultsController];
-    
+
     previouslyActiveAppPath = nil;
     isHidden = true;
     isMain = false;
@@ -633,9 +633,9 @@ static const size_t kModifierEventTypeSpecSize = sizeof(kModifierEventTypeSpec) 
 
     isAutoHide = [[NSUserDefaults standardUserDefaults] boolForKey:@"VisorAutoHide"];
     isOnTop = [[NSUserDefaults standardUserDefaults] boolForKey:@"VisorOnTop"];
-    
+
     [NSBundle loadNibNamed:@"Visor" owner:self];
-    
+
     [self updateHotKeyRegistration];
     [self updateEscapeHotKeyRegistration];
     [self startEventMonitoring];
@@ -643,14 +643,14 @@ static const size_t kModifierEventTypeSpecSize = sizeof(kModifierEventTypeSpec) 
     if ([ud boolForKey:@"VisorShowStatusItem"]) {
         [self activateStatusMenu];
     }
-    
+
     // watch for hotkey changes
     [udc addObserver:self forKeyPath:@"values.VisorHotKey" options:0 context:nil];
     [udc addObserver:self forKeyPath:@"values.VisorHotKeyEnabled" options:0 context:nil];
     [udc addObserver:self forKeyPath:@"values.VisorHotKey2" options:0 context:nil];
     [udc addObserver:self forKeyPath:@"values.VisorHotKey2Enabled" options:0 context:nil];
-    [udc addObserver:self forKeyPath:@"values.VisorUseFade" options:0 context:nil];                                                           
-    [udc addObserver:self forKeyPath:@"values.VisorUseSlide" options:0 context:nil];               
+    [udc addObserver:self forKeyPath:@"values.VisorUseFade" options:0 context:nil];
+    [udc addObserver:self forKeyPath:@"values.VisorUseSlide" options:0 context:nil];
     [udc addObserver:self forKeyPath:@"values.VisorAnimationSpeed" options:0 context:nil];
     [udc addObserver:self forKeyPath:@"values.VisorShowStatusItem" options:0 context:nil];
     [udc addObserver:self forKeyPath:@"values.VisorScreen" options:0 context:nil];
@@ -658,7 +658,7 @@ static const size_t kModifierEventTypeSpecSize = sizeof(kModifierEventTypeSpec) 
     [udc addObserver:self forKeyPath:@"values.VisorHideOnEscape" options:0 context:nil];
     [udc addObserver:self forKeyPath:@"values.VisorOnTop" options:0 context:nil];
     [udc addObserver:self forKeyPath:@"values.VisorAutoHide" options:0 context:nil];
-    
+
     return self;
 }
 
@@ -668,15 +668,15 @@ static const size_t kModifierEventTypeSpecSize = sizeof(kModifierEventTypeSpec) 
     CGSWindow wid;
     CGSWindowTag tags[2];
     bool showOnEverySpace = [[NSUserDefaults standardUserDefaults] boolForKey:@"VisorOnEverySpace"];
-    
+
     wid = [win windowNumber];
     cid = _CGSDefaultConnection();
     tags[0] = CGSTagSticky;
     tags[1] = 0;
-    
+
     if (showOnEverySpace)
         return CGSSetWindowTags(cid, wid, tags, 32);
-    else 
+    else
         return CGSClearWindowTags(cid, wid, tags, 32);
 }
 
@@ -690,7 +690,7 @@ static const size_t kModifierEventTypeSpecSize = sizeof(kModifierEventTypeSpec) 
 
     [self setWindowOnTop];
     [window_ setOpaque:NO];
-        
+
     [self updateStatusMenu];
 }
 
@@ -699,9 +699,9 @@ static const size_t kModifierEventTypeSpecSize = sizeof(kModifierEventTypeSpec) 
     isOnTop = !isOnTop;
     if (isOnTop) {
         [self setWindowOnTop];
-    } else { 
+    } else {
         [self setWindowNormal];
-    }   
+    }
     [self updateStatusMenu];
 }
 
@@ -739,7 +739,7 @@ static const size_t kModifierEventTypeSpecSize = sizeof(kModifierEventTypeSpec) 
     id prefsController = [NSClassFromString(@"TTAppPrefsController") sharedPreferencesController];
     [prefsController Visor_TTAppPrefsController_selectVisorPane];
 }
- 
+
 - (IBAction)visitHomepage:(id)sender {
     LOG(@"visitHomepage");
     [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"http://visor.binaryage.com"]];
@@ -995,7 +995,7 @@ static const size_t kModifierEventTypeSpecSize = sizeof(kModifierEventTypeSpec) 
         // 10.5 path
         // Visor crashes when trying to return focus to non-running application? (http://github.com/darwin/visor/issues#issue/12)
         NSString* scriptSource = [[NSString alloc] initWithFormat:restoreAppAppleScriptSource, previouslyActiveAppPath];
-        NSAppleScript* appleScript = [[NSAppleScript alloc] initWithSource:scriptSource]; 
+        NSAppleScript* appleScript = [[NSAppleScript alloc] initWithSource:scriptSource];
         [appleScript executeAndReturnError: &scriptError];
         [appleScript release];
         [scriptSource release];
@@ -1019,7 +1019,7 @@ static const size_t kModifierEventTypeSpecSize = sizeof(kModifierEventTypeSpec) 
     if (showOnReopen) {
         [self showVisor:NO];
     }
-    
+
     return showOnReopen;
 }
 
@@ -1029,9 +1029,9 @@ static const size_t kModifierEventTypeSpecSize = sizeof(kModifierEventTypeSpec) 
         dontShowOnFirstTab = false;
         return;
     }
-	
+
     BOOL wasHidden = isHidden;
-    
+
     LOG(@"showVisor %d", fast);
     [self setWindowOnTop];
     isHidden = false;
@@ -1049,7 +1049,7 @@ static const size_t kModifierEventTypeSpecSize = sizeof(kModifierEventTypeSpec) 
         [window_ invalidateShadow];
     }
     [window_ update];
-    
+
     if (!isOnTop) {
         [self setWindowNormal];
     }
@@ -1109,7 +1109,7 @@ static const size_t kModifierEventTypeSpecSize = sizeof(kModifierEventTypeSpec) 
             }
         }
     }
-    
+
     // apply final slide and alpha states
     float offset = SLIDE_DIRECTION(direction, SLIDE_EASING(1));
     [self placeWindow:window_ offset:offset];
@@ -1122,7 +1122,7 @@ static const size_t kModifierEventTypeSpecSize = sizeof(kModifierEventTypeSpec) 
     isKey = false;
     [self updateEscapeHotKeyRegistration];
     if (isAutoHide && !isMain && !isKey && !isHidden){
-        [self hideVisor:false];  
+        [self hideVisor:false];
     }
 }
 
@@ -1130,7 +1130,7 @@ static const size_t kModifierEventTypeSpecSize = sizeof(kModifierEventTypeSpec) 
     LOG(@"resignMain %@", sender);
     isMain = false;
     if (isAutoHide && !isMain && !isKey && !isHidden){
-        [self hideVisor:false];  
+        [self hideVisor:false];
     }
 }
 
@@ -1282,12 +1282,12 @@ NSString* stringForCharacter(const unsigned short aKeyCode, unichar aCharacter);
     NSStatusBar *bar = [NSStatusBar systemStatusBar];
     statusItem = [bar statusItemWithLength:NSVariableStatusItemLength];
     [statusItem retain];
-    
+
     [statusItem setHighlightMode:YES];
     [statusItem setTarget:self];
     [statusItem setAction:@selector(toggleVisor:)];
     [statusItem setDoubleAction:@selector(toggleVisor:)];
-  
+
     [statusItem setMenu:statusMenu];
     [self updateStatusMenu];
 }
@@ -1308,21 +1308,21 @@ NSString* stringForCharacter(const unsigned short aKeyCode, unichar aCharacter);
         [showItem setTitle:@"Show Visor"];
     else
         [showItem setTitle:@"Hide Visor"];
-    
+
     // update second menu item
     NSMenuItem* hideItem = [statusMenu itemAtIndex:1];
     if (isAutoHide)
         [hideItem setState:NSOnState];
     else
         [hideItem setState:NSOffState];
-    
+
     // update second menu item
     NSMenuItem* topItem = [statusMenu itemAtIndex:2];
     if (isOnTop)
         [topItem setState:NSOnState];
     else
         [topItem setState:NSOffState];
-	
+
     // update icon
     BOOL status = [self status];
     if (status)
@@ -1336,7 +1336,7 @@ NSString* stringForCharacter(const unsigned short aKeyCode, unichar aCharacter);
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSTimeInterval doubleClickThreshold = [defaults doubleForKey:@"com.apple.mouse.doubleClickThreshold"];
 
-    // if we couldn't find the value in the user defaults, take a 
+    // if we couldn't find the value in the user defaults, take a
     // conservative estimate
     if (doubleClickThreshold <= 0.0) {
         doubleClickThreshold = 1.0;

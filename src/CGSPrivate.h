@@ -3,18 +3,18 @@
 /* DesktopManager -- A virtual desktop provider for OS X
  *
  * Copyright (C) 2003, 2004 Richard J Wareham <richwareham@users.sourceforge.net>
- * This program is free software; you can redistribute it and/or modify it 
- * under the terms of the GNU General Public License as published by the Free 
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the Free
  * Software Foundation; either version 2 of the License, or (at your option)
  * any later version.
  *
- * This program is distributed in the hope that it will be useful, but 
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
- * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License 
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
  * for more details.
  *
- * You should have received a copy of the GNU General Public License along 
- * with this program; if not, write to the Free Software Foundation, Inc., 675 
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc., 675
  * Mass Ave, Cambridge, MA 02139, USA.
  */
 
@@ -84,7 +84,7 @@ typedef enum {
     CGSDown,                // Old desktop moves down.
     CGSLeft,                // Old desktop moves left.
     CGSRight,               // Old desktop moves right.
-    CGSInRight,             // CGSSwap: Old desktop moves into screen, 
+    CGSInRight,             // CGSSwap: Old desktop moves into screen,
                             //          new comes from right.
     CGSBottomLeft = 5,      // CGSSwap: Old desktop moves to bl,
                             //          new comes from tr.
@@ -92,7 +92,7 @@ typedef enum {
     CGSDownTopRight,        // CGSSwap: Old desktop moves down, new from tr.
     CGSUp,                  // Old desktop moves up.
     CGSTopLeft,             // Old desktop moves tl.
-    
+
     CGSTopRight,            // CGSSwap: old to tr. new from bl.
     CGSUpBottomRight,       // CGSSwap: old desktop up, new from br.
     CGSInBottom,            // CGSSwap: old in, new from bottom.
@@ -110,9 +110,9 @@ typedef enum {
 } CGSWindowTag;
 
 extern OSStatus CGSSetWorkspaceWithTransition(const CGSConnection cid,
-    int workspaceNumber, CGSTransitionType transition, CGSTransitionOption subtype, 
+    int workspaceNumber, CGSTransitionType transition, CGSTransitionOption subtype,
     float time);
-    
+
 /* Get the default connection for the current process. */
 extern CGSConnection _CGSDefaultConnection(void);
 
@@ -129,43 +129,43 @@ extern OSStatus CGSNewTransition(const CGSConnection cid, const CGSTransitionSpe
 extern OSStatus CGSInvokeTransition(const CGSConnection cid, int transitionHandle, float duration);
 extern OSStatus CGSReleaseTransition(const CGSConnection cid, int transitionHandle);
 
-// thirtyTwo must = 32 for some reason. tags is pointer to 
+// thirtyTwo must = 32 for some reason. tags is pointer to
 //array ot ints (size 2?). First entry holds window tags.
 // 0x0800 is sticky bit.
-extern OSStatus CGSGetWindowTags(const CGSConnection cid, const CGSWindow wid, 
+extern OSStatus CGSGetWindowTags(const CGSConnection cid, const CGSWindow wid,
     CGSWindowTag *tags, int thirtyTwo);
-extern OSStatus CGSSetWindowTags(const CGSConnection cid, const CGSWindow wid, 
+extern OSStatus CGSSetWindowTags(const CGSConnection cid, const CGSWindow wid,
     CGSWindowTag *tags, int thirtyTwo);
-extern OSStatus CGSClearWindowTags(const CGSConnection cid, const CGSWindow wid, 
+extern OSStatus CGSClearWindowTags(const CGSConnection cid, const CGSWindow wid,
     CGSWindowTag *tags, int thirtyTwo);
 extern OSStatus CGSGetWindowEventMask(const CGSConnection cid, const CGSWindow wid, uint32_t *mask);
 extern OSStatus CGSSetWindowEventMask(const CGSConnection cid, const CGSWindow wid, uint32_t mask);
 
 // Get on-screen window counts and lists.
-extern OSStatus CGSGetWindowCount(const CGSConnection cid, CGSConnection targetCID, int* outCount); 
-extern OSStatus CGSGetWindowList(const CGSConnection cid, CGSConnection targetCID, 
+extern OSStatus CGSGetWindowCount(const CGSConnection cid, CGSConnection targetCID, int* outCount);
+extern OSStatus CGSGetWindowList(const CGSConnection cid, CGSConnection targetCID,
   int count, int* list, int* outCount);
 
 // Get on-screen window counts and lists.
-extern OSStatus CGSGetOnScreenWindowCount(const CGSConnection cid, CGSConnection targetCID, int* outCount); 
-extern OSStatus CGSGetOnScreenWindowList(const CGSConnection cid, CGSConnection targetCID, 
+extern OSStatus CGSGetOnScreenWindowCount(const CGSConnection cid, CGSConnection targetCID, int* outCount);
+extern OSStatus CGSGetOnScreenWindowList(const CGSConnection cid, CGSConnection targetCID,
   int count, int* list, int* outCount);
 
 // Per-workspace window counts and lists.
 extern OSStatus CGSGetWorkspaceWindowCount(const CGSConnection cid, int workspaceNumber, int *outCount);
-extern OSStatus CGSGetWorkspaceWindowList(const CGSConnection cid, int workspaceNumber, int count, 
+extern OSStatus CGSGetWorkspaceWindowList(const CGSConnection cid, int workspaceNumber, int count,
     int* list, int* outCount);
 
 // Gets the level of a window
-extern OSStatus CGSGetWindowLevel(const CGSConnection cid, CGSWindow wid, 
+extern OSStatus CGSGetWindowLevel(const CGSConnection cid, CGSWindow wid,
         int *level);
-        
+
 // Window ordering
-extern OSStatus CGSOrderWindow(const CGSConnection cid, const CGSWindow wid, 
-    CGSWindowOrderingMode place, CGSWindow relativeToWindowID /* can be NULL */);   
+extern OSStatus CGSOrderWindow(const CGSConnection cid, const CGSWindow wid,
+    CGSWindowOrderingMode place, CGSWindow relativeToWindowID /* can be NULL */);
 
 // Gets the screen rect for a window.
-extern OSStatus CGSGetScreenRectForWindow(const CGSConnection cid, CGSWindow wid, 
+extern OSStatus CGSGetScreenRectForWindow(const CGSConnection cid, CGSWindow wid,
         CGRect *outRect);
 
 // Window appearance/position
@@ -173,12 +173,12 @@ extern OSStatus CGSSetWindowAlpha(const CGSConnection cid, const CGSWindow wid, 
 extern OSStatus CGSSetWindowListAlpha(const CGSConnection cid, CGSWindow *wids, int count, float alpha);
 extern OSStatus CGSGetWindowAlpha(const CGSConnection cid, const CGSWindow wid, float* alpha);
 extern OSStatus CGSMoveWindow(const CGSConnection cid, const CGSWindow wid, CGPoint *point);
-extern OSStatus CGSSetWindowTransform(const CGSConnection cid, const CGSWindow wid, CGAffineTransform transform); 
-extern OSStatus CGSGetWindowTransform(const CGSConnection cid, const CGSWindow wid, CGAffineTransform * outTransform); 
-extern OSStatus CGSSetWindowTransforms(const CGSConnection cid, CGSWindow *wids, CGAffineTransform *transform, int n); 
+extern OSStatus CGSSetWindowTransform(const CGSConnection cid, const CGSWindow wid, CGAffineTransform transform);
+extern OSStatus CGSGetWindowTransform(const CGSConnection cid, const CGSWindow wid, CGAffineTransform * outTransform);
+extern OSStatus CGSSetWindowTransforms(const CGSConnection cid, CGSWindow *wids, CGAffineTransform *transform, int n);
 
 extern OSStatus CGSMoveWorkspaceWindows(const CGSConnection connection, int toWorkspace, int fromWorkspace);
-extern OSStatus CGSMoveWorkspaceWindowList(const CGSConnection connection, CGSWindow *wids, int count, 
+extern OSStatus CGSMoveWorkspaceWindowList(const CGSConnection connection, CGSWindow *wids, int count,
     int toWorkspace);
 
 // extern OSStatus CGSConnectionGetPID(const CGSConnection cid, pid_t *pid, CGSConnection b);

@@ -64,7 +64,7 @@ static NSString* colourKeys[] = {
     // I can’t see what I need to do to notify that a setting has changed and refresh the display
     // It’s probably done by something observing key paths, so this does the job
     [self performSelector:@selector(setScriptCursorColor:) withObject:[self performSelector:@selector(scriptCursorColor)]];
-    
+
     // Saves the value
     id cursorType = [values objectForKey:@"CursorType"];
     [self setValue:[NSNumber numberWithInt:-1] forKey:@"CursorType"];
