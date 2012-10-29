@@ -62,8 +62,8 @@
 - (void)getKeyMap:(KeyMap *)keyMap;
 
 // Returns true if one or more of the keys in |keyMap| are also in us.
-// So if you wanted to check if "M" was down, you would create a keyMap 
-// containing "kVK_ANSI_M" and then call 
+// So if you wanted to check if "M" was down, you would create a keyMap
+// containing "kVK_ANSI_M" and then call
 // [myMap containsAnyKeyIn:[QSBKeyMap currentKeyMap]]
 - (BOOL)containsAnyKeyIn:(QSBKeyMap *)keyMap;
 @end

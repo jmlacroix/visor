@@ -80,7 +80,7 @@
     hash += keyMapHash[i];
   }
   return hash;
-}  
+}
 
 - (BOOL)isEqual:(id)keyMap {
   BOOL isEqual = [keyMap isKindOfClass:[self class]];
@@ -103,7 +103,7 @@
 - (QSBKeyMap *)keyMapByAddingKey:(UInt16)keyCode {
   KeyMapByteArray array;
   [self getKeyMap:(KeyMap*)&array];
-  
+
   UInt16 i = keyCode / 8;
   UInt16 j = keyCode % 8;
   array[i] |= 1 << j;

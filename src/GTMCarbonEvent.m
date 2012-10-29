@@ -6,9 +6,9 @@
 //  Licensed under the Apache License, Version 2.0 (the "License"); you may not
 //  use this file except in compliance with the License.  You may obtain a copy
 //  of the License at
-// 
+//
 //  http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 //  Unless required by applicable law or agreed to in writing, software
 //  distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
 //  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -39,9 +39,9 @@
 //    whenPressed - do we do it on key down or key up?
 //  Returns:
 //    a hotkey record, or nil on failure
-- (id)initWithHotKey:(EventHotKeyID)keyID 
-              target:(id)target 
-              action:(SEL)selector 
+- (id)initWithHotKey:(EventHotKeyID)keyID
+              target:(id)target
+              action:(SEL)selector
          whenPressed:(BOOL)onKeyDown;
 
 // Does this record match key |keyID|
@@ -102,7 +102,7 @@
 //
 - (id)initWithClass:(UInt32)inClass kind:(UInt32)kind {
   if ((self = [super init])) {
-    verify_noerr(CreateEvent(kCFAllocatorDefault, inClass, kind, 
+    verify_noerr(CreateEvent(kCFAllocatorDefault, inClass, kind,
                              0, kEventAttributeNone, &event_));
   }
   return self;
@@ -166,7 +166,7 @@
 - (NSString *)description {
   char cls[5];
   UInt32 kind;
-  
+
   // Need everything bigendian if we are printing out the class as a "string"
   *((UInt32 *)cls) = CFSwapInt32HostToBig([self eventClass]);
   kind = [self eventKind];
@@ -235,9 +235,9 @@
 //  Returns:
 //    OSStatus value.
 //
-- (OSStatus)sendToTarget:(GTMCarbonEventHandler *)target 
+- (OSStatus)sendToTarget:(GTMCarbonEventHandler *)target
                  options:(OptionBits)options {
-  return SendEventToEventTargetWithOptions(event_, 
+  return SendEventToEventTargetWithOptions(event_,
                                            [target eventTarget], options);
 }
 
@@ -258,7 +258,7 @@
 //  Post event to current queue with standard priority.
 //
 - (void)postToCurrentQueue {
-  verify_noerr([self postToQueue:GetCurrentEventQueue() 
+  verify_noerr([self postToQueue:GetCurrentEventQueue()
                         priority:kEventPriorityStandard]);
 }
 
@@ -266,7 +266,7 @@
 //  Post event to main queue with standard priority.
 //
 - (void)postToMainQueue {
-  verify_noerr([self postToQueue:GetMainEventQueue() 
+  verify_noerr([self postToQueue:GetMainEventQueue()
                         priority:kEventPriorityStandard]);
 }
 
@@ -280,9 +280,9 @@
 //    size - the size of the data that |data| points to.
 //    data - pointer to the data you want to set the parameter to.
 //
-- (void)setParameterNamed:(EventParamName)name 
-                     type:(EventParamType)type 
-                     size:(ByteCount)size 
+- (void)setParameterNamed:(EventParamName)name
+                     type:(EventParamType)type
+                     size:(ByteCount)size
                      data:(const void *)data {
   verify_noerr(SetEventParameter(event_, name, type, size, data));
 }
@@ -300,17 +300,17 @@
 //  Returns:
 //    YES is parameter is retrieved successfully. NO if parameter doesn't exist.
 //
-- (BOOL)getParameterNamed:(EventParamName)name 
-                     type:(EventParamType)type 
-                     size:(ByteCount)size 
+- (BOOL)getParameterNamed:(EventParamName)name
+                     type:(EventParamType)type
+                     size:(ByteCount)size
                      data:(void *)data {
-  OSStatus status = GetEventParameter(event_, name, type, 
+  OSStatus status = GetEventParameter(event_, name, type,
                                       NULL, size, NULL, data);
   return status == noErr;
 }
 
 
-//  Gets a the size of a parameter from an event. 
+//  Gets a the size of a parameter from an event.
 //
 //  Arguments:
 //    name - the parameter name.
@@ -396,7 +396,7 @@ const OSType kGTMCarbonFrameworkSignature = 'GTM ';
 // Returns:
 //   OSStatus - usually either noErr or eventNotHandledErr
 //
-- (OSStatus)handleEvent:(GTMCarbonEvent *)event 
+- (OSStatus)handleEvent:(GTMCarbonEvent *)event
                 handler:(EventHandlerCallRef)handler {
   OSStatus status = eventNotHandledErr;
   require(event, CantUseParams);
@@ -434,14 +434,14 @@ static OSStatus EventHandler(EventHandlerCallRef inHandler,
   GTMCarbonEvent *event = [GTMCarbonEvent eventWithEvent:inEvent];
   GTMCarbonEventHandler *handler= (GTMCarbonEventHandler *)inUserData;
   check([handler isKindOfClass:[GTMCarbonEventHandler class]]);
-  
+
   // First check to see if our delegate cares about this event. If the delegate
   // handles it (i.e responds to it and does not return eventNotHandledErr) we
   // do not pass it on to default handling.
   OSStatus status = eventNotHandledErr;
   if ([handler delegateRespondsToHandleEvent]) {
-    status = [[handler delegate] gtm_eventHandler:handler 
-                                    receivedEvent:event 
+    status = [[handler delegate] gtm_eventHandler:handler
+                                    receivedEvent:event
                                           handler:inHandler];
   }
   if (status == eventNotHandledErr) {
@@ -461,8 +461,8 @@ static OSStatus EventHandler(EventHandlerCallRef inHandler,
     if ( sHandlerProc == NULL ) {
       sHandlerProc = NewEventHandlerUPP(EventHandler);
     }
-    verify_noerr(InstallEventHandler([self eventTarget], 
-                                     sHandlerProc, 0, 
+    verify_noerr(InstallEventHandler([self eventTarget],
+                                     sHandlerProc, 0,
                                      NULL, self, &eventHandler_));
   }
   return eventHandler_;
@@ -491,7 +491,7 @@ static OSStatus EventHandler(EventHandlerCallRef inHandler,
 
 @implementation GTMCarbonEventMonitorHandler
 
-GTMOBJECT_SINGLETON_BOILERPLATE(GTMCarbonEventMonitorHandler, 
+GTMOBJECT_SINGLETON_BOILERPLATE(GTMCarbonEventMonitorHandler,
                                 sharedEventMonitorHandler);
 
 - (EventTargetRef)eventTarget {
@@ -502,7 +502,7 @@ GTMOBJECT_SINGLETON_BOILERPLATE(GTMCarbonEventMonitorHandler,
 
 @implementation GTMCarbonEventDispatcherHandler
 
-GTMOBJECT_SINGLETON_BOILERPLATE(GTMCarbonEventDispatcherHandler, 
+GTMOBJECT_SINGLETON_BOILERPLATE(GTMCarbonEventDispatcherHandler,
                                 sharedEventDispatcherHandler);
 
 // Register for the events we handle, and set up the dictionaries we need
@@ -547,13 +547,13 @@ GTMOBJECT_SINGLETON_BOILERPLATE(GTMCarbonEventDispatcherHandler,
 //    a EventHotKeyRef that you can use with other Carbon functions, or for
 //    unregistering the hotkey. Note that all hotkeys are unregistered
 //    automatically when an app quits. Will be NULL on failure.
-- (EventHotKeyRef)registerHotKey:(NSUInteger)keyCode 
-                       modifiers:(NSUInteger)cocoaModifiers 
-                          target:(id)target 
-                          action:(SEL)selector 
+- (EventHotKeyRef)registerHotKey:(NSUInteger)keyCode
+                       modifiers:(NSUInteger)cocoaModifiers
+                          target:(id)target
+                          action:(SEL)selector
                      whenPressed:(BOOL)onKeyDown {
   static UInt32 sCurrentID = 0;
-  
+
   EventHotKeyRef theRef = NULL;
   EventHotKeyID keyID;
   keyID.signature = kGTMCarbonFrameworkSignature;
@@ -565,12 +565,12 @@ GTMOBJECT_SINGLETON_BOILERPLATE(GTMCarbonEventDispatcherHandler,
                              autorelease];
   require(newKey, CantCreateKey);
   require_noerr(RegisterEventHotKey((UInt32)keyCode,
-                                    GTMCocoaToCarbonKeyModifiers(cocoaModifiers), 
-                                    keyID, 
-                                    [self eventTarget], 
-                                    0, 
+                                    GTMCocoaToCarbonKeyModifiers(cocoaModifiers),
+                                    keyID,
+                                    [self eventTarget],
+                                    0,
                                     &theRef), CantRegisterHotkey);
-  
+
 
   [hotkeys_ setObject:newKey forKey:[NSValue valueWithPointer:theRef]];
 CantCreateKey:
@@ -595,7 +595,7 @@ CantRegisterHotkey:
 //    Yes if handled.
 - (BOOL)handleHotKeyEvent:(GTMCarbonEvent *)event {
   EventHotKeyID keyID;
-  BOOL handled = [event getEventHotKeyIDParameterNamed:kEventParamDirectObject 
+  BOOL handled = [event getEventHotKeyIDParameterNamed:kEventParamDirectObject
                                                   data:&keyID];
   if (handled) {
     GTMCarbonHotKey *hotkey;
@@ -603,7 +603,7 @@ CantRegisterHotkey:
       if ([hotkey matchesHotKeyID:keyID]) {
         EventKind kind = [event eventKind];
         BOOL onKeyDown = [hotkey onKeyDown];
-        if ((kind == kEventHotKeyPressed && onKeyDown) || 
+        if ((kind == kEventHotKeyPressed && onKeyDown) ||
             (kind == kEventHotKeyReleased && !onKeyDown)) {
           handled = [hotkey sendAction:self];
         }
@@ -622,7 +622,7 @@ CantRegisterHotkey:
 //    handler - the handler call ref
 //  Returns:
 //    OSStatus
-- (OSStatus)handleEvent:(GTMCarbonEvent *)event 
+- (OSStatus)handleEvent:(GTMCarbonEvent *)event
                 handler:(EventHandlerCallRef)handler {
   OSStatus theStatus = eventNotHandledErr;
   if ([event eventClass] == kEventClassKeyboard) {
@@ -651,9 +651,9 @@ CantRegisterHotkey:
 //    whenPressed - do we do it on key down or key up?
 //  Returns:
 //    a hotkey record, or nil on failure
-- (id)initWithHotKey:(EventHotKeyID)keyID 
-              target:(id)target 
-              action:(SEL)selector 
+- (id)initWithHotKey:(EventHotKeyID)keyID
+              target:(id)target
+              action:(SEL)selector
          whenPressed:(BOOL)onKeyDown {
   if ((self = [super init])) {
     if(!target || !selector) {
@@ -664,11 +664,11 @@ CantRegisterHotkey:
     target_ = [target retain];
     selector_ = selector;
     onKeyDown_ = onKeyDown;
-    GTMAssertSelectorNilOrImplementedWithReturnTypeAndArguments(target, 
-                                                                selector, 
-                                                                @encode(void), 
+    GTMAssertSelectorNilOrImplementedWithReturnTypeAndArguments(target,
+                                                                selector,
+                                                                @encode(void),
                                                                 @encode(id),
-                                                                NULL); 
+                                                                NULL);
   }
   return self;
 }

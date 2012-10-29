@@ -6,9 +6,9 @@
 //  Licensed under the Apache License, Version 2.0 (the "License"); you may not
 //  use this file except in compliance with the License.  You may obtain a copy
 //  of the License at
-// 
+//
 //  http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 //  Unless required by applicable law or agreed to in writing, software
 //  distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
 //  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -48,13 +48,13 @@
 //  Sample window delegate method:
 //
 //    -(id)windowWillReturnFieldEditor:(NSWindow *)sender toObject:(id)anObject {
-//      
+//
 //      if ([anObject isKindOfClass:[GTMHotKeyTextField class]]) {
 //        return [GTMHotKeyFieldEditor sharedHotKeyFieldEditor];
 //      } else {
 //        return nil;  // Window will use the AppKit shared editor
 //      }
-//      
+//
 //    }
 //
 //
@@ -85,7 +85,7 @@
 // display. Modifiers are represented in the string in the same order they would
 // appear in the Menu Manager.
 //
-//  Args: 
+//  Args:
 //    flags: -[NSEvent modifierFlags]
 //
 //  Returns:
@@ -107,7 +107,7 @@
 // Returns:
 //   Autoreleased NSString
 //
-+ (NSString *)stringForKeycode:(UInt16)keycode 
++ (NSString *)stringForKeycode:(UInt16)keycode
                           useGlyph:(BOOL)useGlyph
                     resourceBundle:(NSBundle *)bundle;
 
